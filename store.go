@@ -29,8 +29,6 @@ type Output interface{}
 
 func handler(ctx context.Context, e Event) (string, error) {
 
-	// return fmt.Sprintf("%v", eage*2), nil
-
 	b := make([]byte, 16)
 	_, err := rand.Read(b)
 	if err != nil {
