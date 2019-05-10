@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/rand"
 	"fmt"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -13,9 +12,10 @@ import (
 )
 
 type Event struct {
-	Age    int `json:"age"`
-	Height int `json:"height"`
-	Income int `json:"income"`
+	PrincipalID string `json:"principalId"`
+	Age         int    `json:"age"`
+	Height      int    `json:"height"`
+	Income      int    `json:"income"`
 }
 
 type Record struct {
@@ -25,24 +25,16 @@ type Record struct {
 	Income int
 }
 
-type Output interface{}
-
 func handler(ctx context.Context, e Event) (string, error) {
-
-	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
 
 	fmt.Println("Event 1 : ", e)
 	r := Record{
-		Userid: fmt.Sprintf("%X-%X-%X-%X-%X", b[0:4], b[4:6], b[6:8], b[8:10], b[10:]),
+		Userid: e.PrincipalID,
 		Age:    e.Age,
 		Height: e.Height,
 		Income: e.Income,
 	}
-
+	fmt.Println("Record", r)
 	config := &aws.Config{
 		Region: aws.String("us-east-2"),
 	}
